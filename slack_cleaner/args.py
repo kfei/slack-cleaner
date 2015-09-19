@@ -16,15 +16,22 @@ class Args():
                        help='Delay between API calls (in seconds)')
 
         # Type
-        group = p.add_mutually_exclusive_group(required=True)
-        group.add_argument('--message', action='store_true',
-                           help='Delete messages')
-        group.add_argument('--file', action='store_true',
-                           help='Delete files')
+        g_type = p.add_mutually_exclusive_group(required=True)
+        g_type.add_argument('--message', action='store_true',
+                            help='Delete messages')
+        g_type.add_argument('--file', action='store_true',
+                            help='Delete files')
+
+        # Channel, DM or group
+        g_chan = p.add_mutually_exclusive_group(required=True)
+        g_chan.add_argument('--channel',
+                            help='Channel name\'s, e.g., general')
+        g_chan.add_argument('--direct',
+                            help='Direct message\'s name, e.g., sherry')
+        g_chan.add_argument('--group',
+                            help='Private group\'s name')
 
         # Conditions
-        p.add_argument('--channel',
-                       help='Specify the channel name, e.g., general')
         p.add_argument('--user',
                        help='Delete messages from certain user')
         p.add_argument('--bot', action='store_true',
@@ -48,6 +55,9 @@ class Args():
         self.delete_file = args.file
 
         self.channel_name = args.channel
+        self.direct_name = args.direct
+        self.group_name = args.group
+
         self.user_name = args.user
         self.bot = args.bot
         self.start_time = args.after

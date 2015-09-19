@@ -14,6 +14,12 @@ pip install slack-cleaner
 # Delete all messages from a channel
 slack-cleaner --token=<TOKEN> --message --channel general
 
+# Delete all messages from a private group
+slack-cleaner --token=<TOKEN> --message --group hr
+
+# Delete all messages from a direct message channel
+slack-cleaner --token=<TOKEN> --message --direct sherry
+
 # Delete all messages from certain user
 slack-cleaner --token=<TOKEN> --message --channel gossip --user johndoe
 

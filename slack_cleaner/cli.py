@@ -51,9 +51,18 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
     oldest = time_range.start_ts
     latest = time_range.end_ts
 
+    _api_end_point = None
+    # Set to the right API end point
+    if args.channel_name:
+        _api_end_point = slack.channels.history
+    elif args.direct_name:
+        _api_end_point = slack.im.history
+    elif args.group_name:
+        _api_end_point = slack.groups.history
+
     has_more = True
     while has_more:
-        res = slack.channels.history(channel_id, latest, oldest).body
+        res = _api_end_point(channel_id, latest, oldest).body
         if not res['ok']:
             logger.error('Error occurred on Slack\'s API:')
             pp.pprint(res)
@@ -142,30 +151,59 @@ def get_channel_id_by_name(name):
         return get_id_by_name(channels, name)
 
 
+def get_direct_id_by_name(name):
+    res = slack.im.list().body
+    if not res['ok']:
+        return
+    ims = res['ims']
+    if len(ims) > 0:
+        _user_id = get_user_id_by_name(name)
+        for i in ims:
+            if i['user'] == _user_id:
+                return i['id']
+
+
+def get_group_id_by_name(name):
+    res = slack.groups.list().body
+    if not res['ok']:
+        return
+    groups = res['groups']
+    if len(groups) > 0:
+        return get_id_by_name(groups, name)
+
+
 def message_cleaner():
+    _channel_id = None
+    _user_id = None
+
     # If channel's name is supplied
     if args.channel_name:
         _channel_id = get_channel_id_by_name(args.channel_name)
-        if _channel_id is None:
-            sys.exit('Channel not found')
 
-        _user_id = None
-        if args.user_name:
-            _user_id = get_user_id_by_name(args.user_name)
-            if _user_id is None:
-                sys.exit('User not found')
+    # If DM's name is supplied
+    if args.direct_name:
+        _channel_id = get_direct_id_by_name(args.direct_name)
 
-        # Delete messages on certain channel
-        clean_channel(_channel_id, time_range, _user_id, args.bot)
+    # If channel's name is supplied
+    if args.group_name:
+        _channel_id = get_group_id_by_name(args.group_name)
 
-    else:
-        # TODO: Delete messages among all channels
-        sys.exit('Please specify a channel')
+    if _channel_id is None:
+        sys.exit('Channel, direct message or private group not found')
+
+    # If user's name is also supplied
+    if args.user_name:
+        _user_id = get_user_id_by_name(args.user_name)
+        if _user_id is None:
+            sys.exit('User not found')
+
+    # Delete messages on certain channel
+    clean_channel(_channel_id, time_range, _user_id, args.bot)
 
 
 def file_cleaner():
     # TODO
-    print 'Not supported yet'
+    print 'File deletion is not implemented yet'
 
 
 def main():
