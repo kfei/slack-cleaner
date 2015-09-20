@@ -39,6 +39,23 @@ if args.perform:
 stderr_log_handler = logging.StreamHandler()
 logger.addHandler(stderr_log_handler)
 
+# User dict
+user_dict = {}
+
+
+# Construct a local user dict for further usage
+def init_user_dict():
+    res = slack.users.list().body
+    if not res['ok']:
+        return
+    members = res['members']
+
+    for m in members:
+        user_dict[m['id']] = m['name']
+
+# Init user dict
+init_user_dict()
+
 
 def get_id_by_name(list_dict, key_name):
     for d in list_dict:
@@ -104,6 +121,15 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
 
 
 def delete_message_on_channel(channel_id, message):
+    def get_user_name(m):
+        if m.get('user'):
+            _id = m.get('user')
+            return user_dict[_id]
+        elif m.get('username'):
+            return m.get('username')
+        else:
+            return '_'
+
     # Actually perform task
     if args.perform:
         try:
@@ -116,7 +142,7 @@ def delete_message_on_channel(channel_id, message):
             return
 
         logger.warning(Colors.RED + 'Deleted message -> ' + Colors.ENDC
-                       + (message.get('user') or '_')
+                       + get_user_name(message)
                        + ' : '
                        + message['text'])
 
@@ -126,7 +152,7 @@ def delete_message_on_channel(channel_id, message):
     # Just simulate the task
     else:
         logger.warning(Colors.YELLOW + 'Will delete message -> ' + Colors.ENDC
-                       + (message.get('user') or '_')
+                       + get_user_name(message)
                        + ' : '
                        + message['text'])
 
@@ -134,12 +160,9 @@ def delete_message_on_channel(channel_id, message):
 
 
 def get_user_id_by_name(name):
-    res = slack.users.list().body
-    if not res['ok']:
-        return
-    members = res['members']
-    if len(members) > 0:
-        return get_id_by_name(members, name)
+    for k, v in user_dict.iteritems():
+        if v == name:
+            return k
 
 
 def get_channel_id_by_name(name):
