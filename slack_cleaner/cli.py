@@ -8,6 +8,7 @@ import time
 
 from slacker import Slacker
 
+from slack_cleaner import __version__
 from slack_cleaner.utils import Colors, Counter, TimeRange
 from slack_cleaner.args import Args
 
@@ -38,6 +39,9 @@ if args.perform:
 # And always display on console
 stderr_log_handler = logging.StreamHandler()
 logger.addHandler(stderr_log_handler)
+
+# Print version information
+logger.info('Running slack-cleaner v' + __version__)
 
 # User dict
 user_dict = {}
