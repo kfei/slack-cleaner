@@ -130,10 +130,10 @@ def delete_message_on_channel(channel_id, message):
         else:
             return '_'
 
-    # Actually perform task
+    # Actually perform the task
     if args.perform:
         try:
-            # No response is good response
+            # No response is a good response
             # FIXME: Why this behaviour differ from Slack's documantation?
             slack.chat.delete(channel_id, message['ts'])
         except:
@@ -144,7 +144,7 @@ def delete_message_on_channel(channel_id, message):
         logger.warning(Colors.RED + 'Deleted message -> ' + Colors.ENDC
                        + get_user_name(message)
                        + ' : '
-                       + message['text'])
+                       + message.get('text', ''))
 
         if args.rate_limit:
             time.sleep(args.rate_limit)
@@ -154,7 +154,7 @@ def delete_message_on_channel(channel_id, message):
         logger.warning(Colors.YELLOW + 'Will delete message -> ' + Colors.ENDC
                        + get_user_name(message)
                        + ' : '
-                       + message['text'])
+                       + message.get('text', ''))
 
     counter.increase()
 
