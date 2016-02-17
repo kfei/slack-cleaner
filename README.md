@@ -4,8 +4,16 @@ Bulk delete messages on Slack.
 
 ## Install
 
+Install from Pip:
+
 ```bash
 pip install slack-cleaner
+```
+
+If you prefer Docker, there is a pre-built Docker image as well:
+
+```bash
+docker pull kfei/slack-cleaner
 ```
 
 ## Usage
