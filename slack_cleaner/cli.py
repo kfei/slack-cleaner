@@ -104,11 +104,8 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
             if m['type'] == 'message':
                 # Delete user messages
                 if m.get('user'):
-                    # No matter whos message, just delete
-                    if user_id is None:
-                        delete_message_on_channel(channel_id, m)
                     # Delete message belong to certain user
-                    elif m.get('user') == user_id:
+                    if m.get('user') == user_id:
                         delete_message_on_channel(channel_id, m)
 
                 # Delete bot messages
