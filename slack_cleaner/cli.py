@@ -102,10 +102,10 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
 
             # Delete user messages
             if m['type'] == 'message':
-                # Delete user messages
+                # If it's a normal user message
                 if m.get('user'):
-                    # Delete message belong to certain user
-                    if m.get('user') == user_id:
+                    # Delete message if user_name matched or `--user=*`
+                    if m.get('user') == user_id or user_id == -1:
                         delete_message_on_channel(channel_id, m)
 
                 # Delete bot messages
@@ -217,7 +217,12 @@ def message_cleaner():
 
     # If user's name is also supplied
     if args.user_name:
-        _user_id = get_user_id_by_name(args.user_name)
+        # A little bit tricky here, we use -1 to indicates `--user=*`
+        if args.user_name == "*":
+            _user_id = -1
+        else:
+            _user_id = get_user_id_by_name(args.user_name)
+
         if _user_id is None:
             sys.exit('User not found')
 

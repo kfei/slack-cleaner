@@ -20,22 +20,22 @@ docker pull kfei/slack-cleaner
 
 ```bash
 # Delete all messages from a channel
-slack-cleaner --token=<TOKEN> --message --channel general
+slack-cleaner --token=<TOKEN> --message --channel=general --user=*
 
 # Delete all messages from a private group
-slack-cleaner --token=<TOKEN> --message --group hr
+slack-cleaner --token=<TOKEN> --message --group=hr --user=*
 
 # Delete all messages from a direct message channel
-slack-cleaner --token=<TOKEN> --message --direct sherry
+slack-cleaner --token=<TOKEN> --message --direct=sherry --user=johndoe
 
 # Delete all messages from certain user
-slack-cleaner --token=<TOKEN> --message --channel gossip --user johndoe
+slack-cleaner --token=<TOKEN> --message --channel=gossip --user=johndoe
 
 # Delete all messages from bots (especially flooding CI updates)
-slack-cleaner --token=<TOKEN> --message --channel auto-build --bot
+slack-cleaner --token=<TOKEN> --message --channel=auto-build --bot
 
 # Delete all messages older than 2015/09/19
-slack-cleaner --token=<TOKEN> --message --channel general --before 20150919
+slack-cleaner --token=<TOKEN> --message --channel=general --user=* --before=20150919
 
 # Always have a look at help message
 slack-cleaner --help
