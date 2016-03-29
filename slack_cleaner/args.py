@@ -11,6 +11,10 @@ class Args():
         p.add_argument('--token', required=True,
                        help='Slack API token (https://api.slack.com/web)')
 
+        # Log
+        p.add_argument('--log', action='store_true',
+                        help='Create a log file in the current directory')
+
         # Rate limit
         p.add_argument('--rate', type=int,
                        help='Delay between API calls (in seconds)')
@@ -48,6 +52,8 @@ class Args():
         args = p.parse_args()
 
         self.token = args.token
+
+        self.log = args.log
 
         self.rate_limit = args.rate
 

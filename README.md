@@ -44,7 +44,7 @@ slack-cleaner --help
 ## Tips
 
 After the task, a backup file `slack-cleaner.<timestamp>.log` will be created
-in current directory.
+in current directory if `--log` is added to the command.
 
 If any API problem occurred, try `--rate=<delay-in-seconds>` to reduce the API
 call rate (which by default is unlimited).
