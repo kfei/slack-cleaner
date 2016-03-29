@@ -34,7 +34,8 @@ class Args():
                             help='Direct message\'s name, e.g., sherry')
         g_chan.add_argument('--group',
                             help='Private group\'s name')
-
+        g_chan.add_argument('--mpdirect',
+                            help='Multiparty direct message\'s name, e.g., sherry,james')
         # Conditions
         p.add_argument('--user',
                        help='Delete messages from certain user')
@@ -63,7 +64,8 @@ class Args():
         self.channel_name = args.channel
         self.direct_name = args.direct
         self.group_name = args.group
-
+        self.mpdirect_name = args.mpdirect
+        
         self.user_name = args.user
         self.bot = args.bot
         self.start_time = args.after
