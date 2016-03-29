@@ -30,8 +30,8 @@ counter = Counter()
 logger = logging.getLogger('slack-cleaner')
 logger.setLevel(10)
 
-# Log deleted messages/files if we're gonna actually perform the task
-if args.perform:
+# Log deleted messages/files if we're gonna actually log the task
+if args.log:
     ts = datetime.now().strftime('%Y%m%d-%H%M%S')
     file_log_handler = logging.FileHandler('slack-cleaner.' + ts + '.log')
     logger.addHandler(file_log_handler)
