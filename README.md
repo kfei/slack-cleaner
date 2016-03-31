@@ -29,7 +29,7 @@ slack-cleaner --token <TOKEN> --message --group hr --user "*"
 slack-cleaner --token <TOKEN> --message --direct sherry --user johndoe
 
 # Delete all messages from a multiparty direct message channel
-slack-cleaner --token <TOKEN> --message --mpdirect sherry--james --user "*" 
+slack-cleaner --token <TOKEN> --message --mpdirect sherry,james --user "*" 
 
 # Delete all messages from certain user
 slack-cleaner --token <TOKEN> --message --channel gossip --user johndoe
