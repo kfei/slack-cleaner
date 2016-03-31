@@ -80,6 +80,8 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
         _api_end_point = slack.im.history
     elif args.group_name:
         _api_end_point = slack.groups.history
+    elif args.mpdirect_name:
+        _api_end_point = slack.mpim.history
 
     has_more = True
     while has_more:
@@ -135,7 +137,7 @@ def delete_message_on_channel(channel_id, message):
     if args.perform:
         try:
             # No response is a good response
-            # FIXME: Why this behaviour differ from Slack's documantation?
+            # FIXME: Why this behaviour differ from Slack's documentation?
             slack.chat.delete(channel_id, message['ts'])
         except:
             logger.error(Colors.YELLOW + 'Failed to delete ->' + Colors.ENDC)
@@ -187,6 +189,23 @@ def get_direct_id_by_name(name):
                 return i['id']
 
 
+def get_mpdirect_id_by_name(name):
+    res = slack.mpim.list().body
+    # create set of user ids
+    members = set([get_user_id_by_name(x) for x in name.split(',')])
+
+    if not res['ok']:
+        return
+
+    mpims = res['groups']
+
+    if len(mpims) > 0:
+        for mpim in mpims:
+            # match the mpdirect user ids 
+            if set(mpim['members']) == members:
+                return mpim['id']
+
+
 def get_group_id_by_name(name):
     res = slack.groups.list().body
     if not res['ok']:
@@ -194,7 +213,6 @@ def get_group_id_by_name(name):
     groups = res['groups']
     if len(groups) > 0:
         return get_id_by_name(groups, name)
-
 
 def message_cleaner():
     _channel_id = None
@@ -211,6 +229,10 @@ def message_cleaner():
     # If channel's name is supplied
     if args.group_name:
         _channel_id = get_group_id_by_name(args.group_name)
+
+    # If group DM's name is supplied
+    if args.mpdirect_name:
+        _channel_id = get_mpdirect_id_by_name(args.mpdirect_name)
 
     if _channel_id is None:
         sys.exit('Channel, direct message or private group not found')

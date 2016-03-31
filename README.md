@@ -28,6 +28,9 @@ slack-cleaner --token <TOKEN> --message --group hr --user "*"
 # Delete all messages from a direct message channel
 slack-cleaner --token <TOKEN> --message --direct sherry --user johndoe
 
+# Delete all messages from a multiparty direct message channel
+slack-cleaner --token <TOKEN> --message --mpdirect sherry,james --user "*" 
+
 # Delete all messages from certain user
 slack-cleaner --token <TOKEN> --message --channel gossip --user johndoe
 
@@ -54,8 +57,8 @@ packages: `pip install --upgrade requests[security]` or just upgrade your
 Python to 2.7.9.
 
 ```
-InsecurePlatformWarning: A true SSLContext object is not available. 
-          This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. 
+InsecurePlatformWarning: A true SSLContext object is not available.
+          This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail.
           For more information, see https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning.
 ```
 
