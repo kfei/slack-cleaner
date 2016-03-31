@@ -191,14 +191,19 @@ def get_direct_id_by_name(name):
 
 def get_mpdirect_id_by_name(name):
     res = slack.mpim.list().body
-    name = 'mpdm-' + name + '-1'
+    # create set of user ids
+    members = set([get_user_id_by_name(x) for x in name.split(',')])
 
     if not res['ok']:
         return
 
     mpims = res['groups']
+
     if len(mpims) > 0:
-        return get_id_by_name(mpims, name)
+        for mpim in mpims:
+            # match the mpdirect user ids 
+            if set(mpim['members']) == members:
+                return mpim['id']
 
 
 def get_group_id_by_name(name):
@@ -208,7 +213,6 @@ def get_group_id_by_name(name):
     groups = res['groups']
     if len(groups) > 0:
         return get_id_by_name(groups, name)
-
 
 def message_cleaner():
     _channel_id = None
