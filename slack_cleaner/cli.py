@@ -146,8 +146,8 @@ def delete_message_on_channel(channel_id, message):
 
         logger.warning(Colors.RED + 'Deleted message -> ' + Colors.ENDC
                        + get_user_name(message)
-                       + ' : '
-                       + message.get('text', ''))
+                       + ' : %s'
+                       , message.get('text', ''))
 
         if args.rate_limit:
             time.sleep(args.rate_limit)
@@ -156,8 +156,8 @@ def delete_message_on_channel(channel_id, message):
     else:
         logger.warning(Colors.YELLOW + 'Will delete message -> ' + Colors.ENDC
                        + get_user_name(message)
-                       + ' : '
-                       + message.get('text', ''))
+                       + ' :  %s'
+                       , message.get('text', ''))
 
     counter.increase()
 
