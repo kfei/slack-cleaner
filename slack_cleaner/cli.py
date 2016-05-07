@@ -168,6 +168,9 @@ def remove_files(time_range, user_id=None, types=None):
     latest = time_range.end_ts
     page = 1
 
+    if user_id == -1:
+        user_id = None
+
     has_more = True
     while has_more:
         res = slack.files.list(user=user_id, ts_from=oldest, ts_to=latest,
