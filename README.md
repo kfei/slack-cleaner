@@ -1,6 +1,6 @@
 # slack-cleaner
 
-Bulk delete messages on Slack.
+Bulk delete messages and files on Slack.
 
 ## Install
 
@@ -40,6 +40,15 @@ slack-cleaner --token <TOKEN> --message --channel auto-build --bot
 
 # Delete all messages older than 2015/09/19
 slack-cleaner --token <TOKEN> --message --channel general --user "*" --before 20150919
+
+# Delete all files
+slack-cleaner --token <TOKEN> --file --user "*"
+
+# Delete all files from certain user
+slack-cleaner --token <TOKEN> -- file --user johndoe
+
+# Delete all snippets and images
+slack-cleaner --token <TOKEN> --file --types snippets,images
 
 # Always have a look at help message
 slack-cleaner --help
