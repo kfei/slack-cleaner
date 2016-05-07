@@ -116,7 +116,7 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
 
             # Exceptions
             else:
-                print('Wierd message')
+                print('Weird message')
                 pp.pprint(m)
 
         if args.rate_limit:
@@ -162,6 +162,61 @@ def delete_message_on_channel(channel_id, message):
     counter.increase()
 
 
+def remove_files(time_range, user_id=None, types=None):
+    # Setup time range for query
+    oldest = time_range.start_ts
+    latest = time_range.end_ts
+    page = 1
+
+    has_more = True
+    while has_more:
+        res = slack.files.list(user=user_id, ts_from=oldest, ts_to=latest,
+                               types=types, page=page).body
+
+        if not res['ok']:
+            logger.error('Error occurred on Slack\'s API:')
+            pp.pprint(res)
+            sys.exit(1)
+
+        files = res['files']
+        current_page = res['paging']['page']
+        total_pages = res['paging']['pages']
+        has_more = current_page < total_pages
+        page = current_page + 1
+
+        for f in files:
+            # Delete user file
+            delete_file(f)
+
+        if args.rate_limit:
+            time.sleep(args.rate_limit)
+
+
+def delete_file(file):
+    # Actually perform the task
+    if args.perform:
+        try:
+            # No response is a good response
+            slack.files.delete(file['id'])
+        except:
+            logger.error(Colors.YELLOW + 'Failed to delete ->' + Colors.ENDC)
+            pp.pprint(file)
+            return
+
+        logger.warning(Colors.RED + 'Deleted file -> ' + Colors.ENDC
+                       + file.get('title', ''))
+
+        if args.rate_limit:
+            time.sleep(args.rate_limit)
+
+    # Just simulate the task
+    else:
+        logger.warning(Colors.YELLOW + 'Will delete file -> ' + Colors.ENDC
+                       + file.get('title', ''))
+
+    counter.increase()
+
+
 def get_user_id_by_name(name):
     for k, v in user_dict.iteritems():
         if v == name:
@@ -201,7 +256,7 @@ def get_mpdirect_id_by_name(name):
 
     if len(mpims) > 0:
         for mpim in mpims:
-            # match the mpdirect user ids 
+            # match the mpdirect user ids
             if set(mpim['members']) == members:
                 return mpim['id']
 
@@ -213,6 +268,7 @@ def get_group_id_by_name(name):
     groups = res['groups']
     if len(groups) > 0:
         return get_id_by_name(groups, name)
+
 
 def message_cleaner():
     _channel_id = None
@@ -253,8 +309,23 @@ def message_cleaner():
 
 
 def file_cleaner():
-    # TODO
-    print('File deletion is not implemented yet')
+    _user_id = None
+    _types = None
+
+    if args.user_name:
+        # A little bit tricky here, we use -1 to indicates `--user=*`
+        if args.user_name == "*":
+            _user_id = -1
+        else:
+            _user_id = get_user_id_by_name(args.user_name)
+
+        if _user_id is None:
+            sys.exit('User not found')
+
+    if args.types:
+        _types = args.types
+
+    remove_files(time_range, _user_id, _types)
 
 
 def main():
@@ -280,8 +351,8 @@ def main():
     logger.info('\n' + result + '\n')
 
     if not args.perform:
-        logger.info('Now you can re-run this program with `--perform`'
-                    + ' to actually perform the task.' + '\n')
+        logger.info('Now you can re-run this program with `--perform`' +
+                    ' to actually perform the task.' + '\n')
 
 
 if __name__ == '__main__':
