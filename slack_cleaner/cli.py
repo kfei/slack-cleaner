@@ -95,7 +95,7 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
         has_more = res['has_more']
 
         if len(messages) == 0:
-            print 'No more messsages'
+            print('No more messsages')
             break
 
         for m in messages:
@@ -116,7 +116,7 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
 
             # Exceptions
             else:
-                print 'Wierd message'
+                print('Wierd message')
                 pp.pprint(m)
 
         if args.rate_limit:
@@ -254,7 +254,7 @@ def message_cleaner():
 
 def file_cleaner():
     # TODO
-    print 'File deletion is not implemented yet'
+    print('File deletion is not implemented yet')
 
 
 def main():
