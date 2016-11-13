@@ -45,7 +45,7 @@ slack-cleaner --token <TOKEN> --message --channel general --user "*" --before 20
 slack-cleaner --token <TOKEN> --file --user "*"
 
 # Delete all files from certain user
-slack-cleaner --token <TOKEN> -- file --user johndoe
+slack-cleaner --token <TOKEN> --file --user johndoe
 
 # Delete all snippets and images
 slack-cleaner --token <TOKEN> --file --types snippets,images
@@ -74,4 +74,4 @@ InsecurePlatformWarning: A true SSLContext object is not available.
 
 ## Credits
 
-**To all the struggling :cry: startup founders who can only afford free plan.**
+**To all the people who can only afford a free plan. :cry:**
